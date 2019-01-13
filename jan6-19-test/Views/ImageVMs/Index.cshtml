@@ -1,0 +1,246 @@
+﻿@model IEnumerable<jan6_19_test.Models.ViewModels.ImageVM>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutTest.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ImageName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ImagePath)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ImageFile)
+        </th>
+        <th></th>
+    </tr>
+
+@*
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.ImageName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ImagePath)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ImageFile)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ImageId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ImageId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ImageId })
+        </td>
+    </tr>
+}
+*@
+
+</table>
+@*
+<div class="panel panel-body" style="min-height:256px">
+    <div class="col-md-9">
+
+
+        <div class="col-md-4">
+            <div class="btn btn-primary">
+                <input type="file" id="imageBrowes" />
+            </div>
+            <hr />
+
+            <div id="imgPreview" class="thumbnail" style="display:none">
+                <img class="img-responsive" id="targetImg" />
+                <div class="caption">
+                    <a href="#" onclick="ClearPreview()"><i class="glyphicon glyphicon-trash"></i></a>
+                    <span id="description"></span>
+                </div>
+                <a href="#" class="btn btn-default" onclick="Uploadimage()">Upload</a>
+            </div>
+
+        </div>
+        <div class="col-md-2 thumbnail" id="uploadedImage">
+
+
+        </div>
+    </div>
+
+
+</div>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+/*
+
+    $(document).ready(function () {
+
+        $("#imageBrowes").change(function () {
+
+            var File = this.files;
+
+            if (File && File[0]) {
+                ReadImage(File[0]);
+            }
+
+        })
+
+    })
+*/
+
+$(document).ready(function () {
+
+    $("#imageBrowes").change(function () {
+
+
+
+        var File = this.files;
+
+        if (File && File[0]) {
+            ReadImage(File[0]);
+        }
+
+    })
+
+
+})
+
+
+/*
+
+    var ReadImage = function (file) {
+
+        var reader = new FileReader;
+        var image = new Image;
+
+        reader.readAsDataURL(file);
+        reader.onload = function (_file) {
+
+            image.src = _file.target.result;
+            image.onload = function () {
+
+                var height = this.height;
+                var width = this.width;
+                var type = file.type;
+                var size = ~~(file.size / 1024) + "KB";
+
+                $("#targetImg").attr('src', _file.target.result);
+                $("#description").text("Size:" + size + ", " + height + "X " + width + ", " + type + "");
+                $("#imgPreview").show();
+
+            }
+
+        }
+
+    }
+
+    var ClearPreview = function () {
+        $("#imageBrowes").val('');
+        $("#description").text('');
+        $("#imgPreview").hide();
+
+    }*/
+
+var ReadImage = function (file) {
+
+    var reader = new FileReader;
+    var image = new Image;
+
+    reader.readAsDataURL(file);
+    reader.onload = function (_file) {
+
+        image.src = _file.target.result;
+        image.onload = function () {
+
+            var height = this.height;
+            var width = this.width;
+            var type = file.type;
+            var size = ~~(file.size / 1024) + "KB";
+
+            $("#targetImg").attr('src', _file.target.result);
+            $("#description").text("Size:" + size + ", " + height + "X " + width + ", " + type + "");
+            $("#imgPreview").show();
+
+        }
+
+    }
+
+}
+
+var ClearPreview = function () {
+    $("#imageBrowes").val('');
+    $("#description").text('');
+    $("#imgPreview").hide();
+
+}
+
+
+    /*var Uploadimage = function () {
+
+        var file = $("#imageBrowes").get(0).files;
+
+        var data = new FormData;
+        data.append("ImageFile", file[0]);
+        // data.append("ImageName", "Cartoon");
+
+        $.ajax({
+
+            type: "Post",
+            url: "/ImageVMs/ImageUpload",
+            data: data,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                ClearPreview();
+
+                $("#uploadedImage").append('<img src="/UploadedImage/' + response + '" class="img-responsive thumbnail"/>');
+
+
+            }
+
+        })
+
+
+        //
+    }*/
+var Uploadimage = function () {
+
+    var file = $("#imageBrowes").get(0).files;
+
+    var data = new FormData;
+    data.append("ImageFile", file[0]);
+  //  data.append("ProductName", "SamsungA8");
+
+    $.ajax({
+
+        type: "Post",
+        url: "/ImageVMs/ImageUpload",
+        data: data,
+        contentType: false,
+        processData: false,
+        success: function (imgID) {
+
+            ClearPreview();
+
+            $("#uploadedImage").append('<img src="/ImageVMs/ImageRetrieve?imgID=' + imgID + '" class="img-responsive thumbnail"/>');
+
+
+            //$("#uploadedImage").append('<img src="/UploadedImage/' + response + '" class="img-responsive thumbnail"/>');
+
+
+        }
+
+    })
+
+
+    //
+}
+
+</script>
+*@

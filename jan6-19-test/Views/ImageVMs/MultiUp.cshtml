@@ -1,0 +1,201 @@
+﻿@model jan6_19_test.Models.ViewModels.ImageVM
+@{
+    ViewBag.Title = "MultiUp";
+    Layout = "~/Views/Shared/_LayoutTest.cshtml";
+}
+
+<h2>Multi</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>ImageVM</h4>
+        <hr />
+        @*<div class="panel panel-body" style="min-height:256px">
+            <div class="col-md-9">
+                <div class="col-md-4">
+                    <div class="btn btn-primary">
+                        <input type="file" id="fileUpload" multiple />
+                    </div>
+                    <hr />
+                    <div id="imgPreview" class="thumbnail" style="display:none">
+                        <img class="img-responsive" id="targetImg"  />
+                        <div class="caption">
+                            <a href="#" onclick="ClearPreview()"><i class="glyphicon glyphicon-trash"></i></a>
+                            <span id="description"></span>
+                        </div>
+                        <a href="#" class="btn btn-default" onclick="Uploadimage()">Upload</a>
+                    </div>
+                    <hr />
+               
+                        $1$<input type="file" id="fileUpload" multiple />
+                        <label for="fileUpload" class="upload-mask-button">Upload</label>#1#
+                  
+
+                </div>
+                <div class="col-md-2 thumbnail" id="uploadedImage">
+                </div>
+            </div>
+
+
+        </div>*@       
+        <form method="post" enctype="multipart/form-data">                
+            Upload Images
+            <input type="file" multiple="multiple" name="FileUp" id="FileUp" accept="image/*" />
+            <br /><br />
+            <div id="showimage">
+                Here is image Priviewing
+            </div>
+            <hr />  
+            @*<asp:Button ID="Button1" runat="server" Text="Upload and Save" OnClick="Button1_Click" />*@
+            <a href="#" class="btn btn-default" onclick="uploadFiles()">Upload</a>
+        </form>
+        
+    
+
+      
+
+    </div>
+}
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous"></script>
+@*<script>
+        $(document).ready(function () {
+
+            $("#imageBrowes").change(function () {
+                var File = this.files;
+                if (File && File[0]) {
+                    ReadImage(File[0]);
+                }
+            })
+        })
+        var ReadImage = function (file) {
+            var reader = new FileReader;
+            var image = new Image;
+            reader.readAsDataURL(file);
+            reader.onload = function (_file) {
+                image.src = _file.target.result;
+                image.onload = function () {
+                    var height = this.height;
+                    var width = this.width;
+                    var type = file.type;
+                    var size = ~~(file.size / 1024) + "KB";
+                    $("#targetImg").attr('src', _file.target.result);
+                    $("#description").text("Size:" + size + ", " + height + "X " + width + ", " + type + "");
+                    $("#imgPreview").show();
+                }
+            }
+        }
+        var ClearPreview = function () {
+            $("#imageBrowes").val('');
+            $("#description").text('');
+            $("#imgPreview").hide();
+
+        }
+        var Uploadimage = function () {
+
+            var file = $("#imageBrowes").get(0).files;
+            var data = new FormData;
+            data.append("ImageFile", file[0]);
+            //  data.append("ProductName", "SamsungA8");
+            $.ajax({
+                type: "Post",
+                url: "/ImageVMs/ImageUpload",
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (imgID) {
+                    ClearPreview();
+                    $("#uploadedImage").append('<img src="/ImageVMs/ImageRetrieve?imgID=' + imgID + '" class="img-responsive thumbnail"/>');
+                }
+            })
+        }
+    </script>*@
+@*<script>
+
+    $(document).ready(function () {
+        $("#fileUpload").on("change", function () {
+            var files = $(this).get(0).files;
+            var formData = new FormData();
+            for (var i = 0; i < files.length; i++) {
+                formData.append(files[i].name, files[i]);
+            }
+
+            uploadFiles(formData);
+        })
+    })
+
+    function uploadFiles(formData) {
+        $.ajax({
+            url: "/ImageVMs/UploadFiles",
+            method: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                var str = "";
+                for (var i = 0; i < data.length; i++) {
+                    str += "<img src='" + data[i] + "' height='100' width='100'>"
+                }
+
+                $(".file-upload-container").append(str);
+            },
+            error: function (data) {
+                alert("Upload Failed!");
+            }
+        })
+    }
+</script>*@
+<script>
+    $(document).ready(function () {
+        $("#FileUp").change(function () {
+            var count = $("#FileUp").children();
+            var previewimages = $("#showimage");
+            previewimages.html("");
+            $($(this)[0].files).each(function () {
+                var file = $(this);
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    var img = $("<img />");
+                    img.attr("style", "height:150px;width: 150px;");
+                    img.attr("src", e.target.result);
+                    previewimages.append(img);
+                }
+                reader.readAsDataURL(file[0]);
+            });
+            
+        });
+    });
+    function uploadFiles(formData) {
+        $.ajax({
+            url: "/ImageVMs/UploadFiles",
+            method: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                alert(data);
+                var str = "";
+                for (var i = 0; i < data.length; i++) {
+                    str += "<img src='" + data[i] + "' height='100' width='100'>"
+                }
+
+                $(".file-upload-container").append(str);
+            },
+            error: function (data) {
+                alert("Upload Failed!");
+            }
+        })
+    }
+
+</script>
